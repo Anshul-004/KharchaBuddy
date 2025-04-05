@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ExpenseManager",
-    "slug": "ExpenseManager",
+    "name": "kharchabuddy",
+    "slug": "kharchabuddy",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
