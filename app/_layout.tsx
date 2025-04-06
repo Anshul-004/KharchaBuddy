@@ -26,6 +26,11 @@ export default function RootLayout() {
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="expenses/[id]" options={{ headerShown: false }} />
       <Stack.Screen name="screens/profile" options={{ headerShown: true, headerTitle: "User Profile"}}  />
+      <Stack.Screen name="screens/appearance" options={{ headerShown: true, headerTitle: "Appearance"}}  />
+      <Stack.Screen name="screens/dataBackup" options={{ headerShown: true, headerTitle: "Data Backup"}}  />
+      <Stack.Screen name="screens/notifySetting" options={{ headerShown: true, headerTitle: "Notification Setting"}}  />
+      <Stack.Screen name="screens/security" options={{ headerShown: true, headerTitle: "Security"}}  />
+      <Stack.Screen name="screens/privacy" options={{ headerShown: true, headerTitle: "Privacy Policy"}}  />
     </Stack>
   );
 }
