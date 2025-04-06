@@ -1,13 +1,23 @@
 import { Stack, useRouter } from "expo-router";
 import "./globals.css";
 import { useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function RootLayout() {
   const router = useRouter();
 
   useEffect(() => {
-    // Check condition here if user is new or already onboarded (localstorage / asyncstorage)
-    router.replace("/onboarding");
+    const checkOnboarding = async () => {
+      const hasOnboarded = await AsyncStorage.getItem("hasOnboarded");
+
+      if (hasOnboarded) {
+        router.replace("/(tabs)"); // Main app screen
+      } else {
+        router.replace("/onboarding"); // Show onboarding
+      }
+    };
+
+    checkOnboarding();
   }, []);
 
   return (
