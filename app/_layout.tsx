@@ -25,6 +25,7 @@ export default function RootLayout() {
       <Stack.Screen name="onboarding" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="expenses/[id]" options={{ headerShown: false }} />
+      <Stack.Screen name="screens/profile" options={{ headerShown: true, headerTitle: "User Profile"}}  />
     </Stack>
   );
 }
