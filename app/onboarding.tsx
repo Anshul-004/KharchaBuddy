@@ -3,7 +3,7 @@ import { useState, useRef } from 'react';
 import { useRouter } from 'expo-router';
 import Carousel from 'react-native-reanimated-carousel';
 import { images } from '@/constants/images';
-import { icons } from '@/constants/icons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Onboarding = () => {
     const router = useRouter();
@@ -103,9 +103,10 @@ const Onboarding = () => {
         );
     };
 
-    const handleGetStarted = () => {
-        router.push('/(tabs)');
-    };
+    const handleGetStarted = async () => {
+        await AsyncStorage.setItem("hasOnboarded", "true");
+        router.replace("/(tabs)"); 
+      };
 
     const renderIndicators = () => {
         return (
