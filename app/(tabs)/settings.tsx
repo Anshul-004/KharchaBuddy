@@ -12,6 +12,8 @@ const settings = () => {
       <Button title="Go to Notification Settings"onPress={() => router.push("../screens/notifySetting")}/>
       <Button title="Go to Security"onPress={() => router.push("../screens/security")}/>
       <Button title="Go to Privacy"onPress={() => router.push("../screens/privacy")}/>
+      <Button title="Go to Login"onPress={() => router.push("../screens/login")}/>
+      <Button title="Go to Register"onPress={() => router.push("../screens/register")}/>
     </View>
   );
 };

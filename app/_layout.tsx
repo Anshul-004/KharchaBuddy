@@ -31,6 +31,8 @@ export default function RootLayout() {
       <Stack.Screen name="screens/notifySetting" options={{ headerShown: true, headerTitle: "Notification Setting"}}  />
       <Stack.Screen name="screens/security" options={{ headerShown: true, headerTitle: "Security"}}  />
       <Stack.Screen name="screens/privacy" options={{ headerShown: true, headerTitle: "Privacy Policy"}}  />
+      <Stack.Screen name="screens/login" options={{ headerShown: false, headerTitle: "login Policy"}}  />
+      <Stack.Screen name="screens/register" options={{ headerShown: false, headerTitle: "register Policy"}}  />
     </Stack>
   );
 }
