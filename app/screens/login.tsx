@@ -3,25 +3,36 @@ import React, { useState } from 'react'
 import { images } from '@/constants/images';
 import { icons } from '@/constants/icons';
 import { useRouter } from 'expo-router';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '@/FirebaseConfig';
 
 const login = () => {
     const router = useRouter();
     const [email, setemail] = useState("")
     const [password, setPassword] = useState("")
+
     const handleSingin = async () => {
         try {
             const user = await signInWithEmailAndPassword(auth, email, password);
             const userdet = user.user;
             console.log(userdet);    
             if (user) router.replace('/(tabs)');
-
-        } catch (err: any) {
+        } 
+        catch (err: any) {
             console.log(err);
             alert("We're having some issues, Please try later.");
-}
-};
+        }
+    };
+    
+    const handleResetPassword = async () => {
+        try {
+            await sendPasswordResetEmail(auth, email);
+            alert("Password reset email sent!");
+        } catch (error) {
+            console.error(error);
+            alert("Error sending password reset email.");
+        }
+    };
     return (
         <View className="flex-1 justify-center items-center bg-white mb-10">
             <View className="w-[80%]">
@@ -51,7 +62,7 @@ const login = () => {
                     />
                     
                     <TouchableOpacity>
-                        <Text className="text-right text-blue-500 mb-6">Forgot Password?</Text>
+                        <Text className="text-right text-blue-500 mb-6" onPress={handleResetPassword}>Forgot Password?</Text>
                     </TouchableOpacity>
                     
                     <TouchableOpacity className="w-[80%] bg-blue-500 py-3 rounded-lg mb-4" onPress={handleSingin}>
