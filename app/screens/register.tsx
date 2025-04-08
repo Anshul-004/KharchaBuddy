@@ -1,13 +1,35 @@
 import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native'
 import { useRouter } from 'expo-router';
-import React from 'react'
+import React, { useState } from 'react'
 import { images } from '@/constants/images';
 import { icons } from '@/constants/icons';
-
+import { auth } from '@/FirebaseConfig';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 
 const register = () => {
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [fullName, setFullName] = useState("")
+    const [cnfPassword, setCnfPassword] = useState("")
     const router = useRouter();
+
+    const handleSingup: () => void = () => {
+        if(password === cnfPassword){
+           
+            createUserWithEmailAndPassword(auth, email, password)
+            .then((userCreds) => {
+                const user = userCreds.user; 
+                console.log(user);
+            })
+            .catch((error) => { alert(error.message); }
+        );
+        }
+        else{
+            alert("You Fucked up..")
+        }
+        
+    };
   return (
     
     <View className="flex-1 justify-center items-center bg-white mb-10">
@@ -23,6 +45,8 @@ const register = () => {
                 <TextInput
                     className="w-full h-12 px-4 mb-4 border border-gray-300 rounded-lg"
                     placeholder="Full Name"
+                    value={fullName}
+                    onChangeText={text => setFullName(text)}
                     autoCapitalize="words"
                 />
 
@@ -30,22 +54,28 @@ const register = () => {
                     className="w-full h-12 px-4 mb-4 border border-gray-300 rounded-lg"
                     placeholder="Email"
                     keyboardType="email-address"
+                    value={email}
+                    onChangeText={text => setEmail(text)}
                     autoCapitalize="none"
                 />
                 
                 <TextInput
                     className="w-full h-12 px-4 mb-4 border border-gray-300 rounded-lg"
                     placeholder="Password"
+                    value={password}
+                    onChangeText={text => setPassword(text)}
                     secureTextEntry
                 />
 
                 <TextInput
                     className="w-full h-12 px-4 mb-6 border border-gray-300 rounded-lg"
                     placeholder="Confirm Password"
+                    value={cnfPassword}
+                    onChangeText={text => setCnfPassword(text)}
                     secureTextEntry
                 />
                 
-                <TouchableOpacity className="w-[80%] bg-blue-500 py-3 rounded-lg mb-4">
+                <TouchableOpacity className="w-[80%] bg-blue-500 py-3 rounded-lg mb-4" onPress={handleSingup}>
                     <Text className="text-white text-center font-semibold">Register</Text>
                 </TouchableOpacity>
 
