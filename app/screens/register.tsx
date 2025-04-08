@@ -7,28 +7,30 @@ import { auth } from '@/FirebaseConfig';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 
-const register = () => {
+const Register = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [fullName, setFullName] = useState("")
     const [cnfPassword, setCnfPassword] = useState("")
     const router = useRouter();
 
-    const handleSingup: () => void = () => {
-        if(password === cnfPassword){
-           
-            createUserWithEmailAndPassword(auth, email, password)
-            .then((userCreds) => {
-                const user = userCreds.user; 
-                console.log(user);
-            })
-            .catch((error) => { alert(error.message); }
-        );
+    const handleSingup = async () => {
+        try {
+            if (password === cnfPassword) {
+                const user = await createUserWithEmailAndPassword(auth, email, password);
+                
+                const userdet = user.user;
+                console.log(userdet);
+                   
+                if (user) router.replace('/(tabs)');
+
+            } else {
+                alert("Ensure Confirmed Password and Password are the same.");
+            }
+        } catch (err: any) {
+            console.log(err);
+            alert("We're having trouble getting you connected !");
         }
-        else{
-            alert("You Fucked up..")
-        }
-        
     };
   return (
     
@@ -112,4 +114,4 @@ const register = () => {
   )
 }
 
-export default register
+export default Register
