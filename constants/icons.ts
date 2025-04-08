@@ -7,6 +7,8 @@ import download from "@/assets/icons/download.png";
 import plus from "@/assets/icons/plus.png";
 import bell from "@/assets/icons/bell.png";
 import money from "@/assets/icons/money.png";
+import google from "@/assets/icons/google.png";
+import github from "@/assets/icons/github.png";
 
 
 
@@ -20,4 +22,6 @@ export const icons = {
   plus,
   bell,
   money,
+  google,
+  github,
 };
