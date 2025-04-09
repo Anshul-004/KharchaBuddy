@@ -5,6 +5,8 @@ import logo from "@/assets/images/logo.png";
 import highlight from "@/assets/images/logo.png";
 import login from "@/assets/images/login.png";
 import register from "@/assets/images/register.png";
+import profile from "@/assets/images/profile.png";
+
 
 
 export const images = {
@@ -15,4 +17,5 @@ export const images = {
   highlight,
   login,
   register,
+  profile,
 };
