@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { images } from '@/constants/images';
 import { icons } from '@/constants/icons';
 import { auth } from '@/FirebaseConfig';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
 
 const Register = () => {
@@ -19,6 +19,9 @@ const Register = () => {
             if (password === cnfPassword) {
                 const user = await createUserWithEmailAndPassword(auth, email, password);
                 
+                await updateProfile(user.user, {
+                    displayName: fullName, // Set the full name
+                });
                 const userdet = user.user;
                 console.log(userdet);
                    
