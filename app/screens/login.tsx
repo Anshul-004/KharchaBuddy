@@ -6,12 +6,14 @@ import { useRouter } from 'expo-router';
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '@/FirebaseConfig';
 
+
 const login = () => {
     const router = useRouter();
     const [email, setemail] = useState("")
     const [password, setPassword] = useState("")
 
     const handleSingin = async () => {
+        setLoading(true);
         try {
             const user = await signInWithEmailAndPassword(auth, email, password);
             const userdet = user.user;
@@ -33,6 +35,7 @@ const login = () => {
             alert("Error sending password reset email.");
         }
     };
+    const [loading, setLoading] = useState(false);
     return (
         <View className="flex-1 justify-center items-center bg-white mb-10">
             <View className="w-[80%]">
@@ -47,6 +50,7 @@ const login = () => {
                     <TextInput
                         className="w-full h-12 px-4 mb-4 border border-gray-300 rounded-lg"
                         placeholder="Email"
+                        placeholderTextColor="#666666"
                         keyboardType="email-address"
                         value={email}
                         onChangeText={text => setemail(text)}
@@ -56,6 +60,7 @@ const login = () => {
                     <TextInput
                         className="w-full h-12 px-4 mb-2 border border-gray-300 rounded-lg"
                         placeholder="Password"
+                        placeholderTextColor="#666666"
                         value={password}
                         onChangeText={text => setPassword(text)}
                         secureTextEntry
@@ -66,7 +71,7 @@ const login = () => {
                     </TouchableOpacity>
                     
                     <TouchableOpacity className="w-[80%] bg-blue-500 py-3 rounded-lg mb-4" onPress={handleSingin}>
-                        <Text className="text-white text-center font-semibold">Login</Text>
+                        <Text className="text-white text-center font-semibold">{loading?"Logging in...":"Login"}</Text>
                     </TouchableOpacity>
                     
                     <View className="flex-row items-center mb-4 w-full">

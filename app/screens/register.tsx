@@ -50,6 +50,7 @@ const Register = () => {
                     value={fullName}
                     onChangeText={text => setFullName(text)}
                     autoCapitalize="words"
+                    placeholderTextColor="#666666"
                 />
 
                 <TextInput
@@ -59,6 +60,7 @@ const Register = () => {
                     value={email}
                     onChangeText={text => setEmail(text)}
                     autoCapitalize="none"
+                    placeholderTextColor="#666666"
                 />
                 
                 <TextInput
@@ -67,6 +69,7 @@ const Register = () => {
                     value={password}
                     onChangeText={text => setPassword(text)}
                     secureTextEntry
+                    placeholderTextColor="#666666"
                 />
 
                 <TextInput
@@ -75,6 +78,7 @@ const Register = () => {
                     value={cnfPassword}
                     onChangeText={text => setCnfPassword(text)}
                     secureTextEntry
+                    placeholderTextColor="#666666"
                 />
                 
                 <TouchableOpacity className="w-[80%] bg-blue-500 py-3 rounded-lg mb-4" onPress={handleSingup}>

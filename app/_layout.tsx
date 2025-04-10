@@ -26,12 +26,10 @@ export default function RootLayout() {
       <Stack.Screen name="onboarding" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="expenses/[id]" options={{ headerShown: false }} />
-      <Stack.Screen name="screens/profile" options={{ headerShown: true, headerTitle: "User Profile"}}  />
-      <Stack.Screen name="screens/appearance" options={{ headerShown: true, headerTitle: "Appearance"}}  />
-      <Stack.Screen name="screens/dataBackup" options={{ headerShown: true, headerTitle: "Data Backup"}}  />
-      <Stack.Screen name="screens/notifySetting" options={{ headerShown: true, headerTitle: "Notification Setting"}}  />
-      <Stack.Screen name="screens/security" options={{ headerShown: true, headerTitle: "Security"}}  />
-      <Stack.Screen name="screens/privacy" options={{ headerShown: true, headerTitle: "Privacy Policy"}}  />
+      <Stack.Screen name="screens/profile" options={{ headerShown: false, headerTitle: "User Profile"}}  />
+      <Stack.Screen name="screens/notifySetting" options={{ headerShown: false, headerTitle: "Notification Setting"}}  />
+      <Stack.Screen name="screens/about" options={{ headerShown: false, headerTitle: "About"}}  />
+      <Stack.Screen name="screens/privacy" options={{ headerShown: false, headerTitle: "Privacy Policy"}}  />
       <Stack.Screen name="screens/login" options={{ headerShown: false}}  />
       <Stack.Screen name="screens/register" options={{ headerShown: false}}  />
     </Stack>

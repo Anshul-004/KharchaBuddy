@@ -105,7 +105,7 @@ const Onboarding = () => {
 
     const handleGetStarted = async () => {
         await AsyncStorage.setItem("hasOnboarded", "true");
-        router.replace("/(tabs)"); 
+        router.replace("/screens/login"); 
       };
 
     const renderIndicators = () => {
