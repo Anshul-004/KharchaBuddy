@@ -1,4 +1,5 @@
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import React from 'react';
 import { useRouter } from 'expo-router';
 
@@ -6,7 +7,7 @@ const Privacy = () => {
   const router = useRouter();
 
   return (
-    <View className="flex-1 bg-white px-6 pt-10">
+    <SafeAreaView className="flex-1 bg-white px-6 py-10">
       <ScrollView contentContainerStyle={{ paddingBottom: 30 }}>
         <Text className="text-3xl font-bold text-gray-800 mb-4 text-center">Privacy Policy</Text>
 
@@ -38,15 +39,8 @@ const Privacy = () => {
         <Text className="text-gray-700 mb-6">
           If you have any questions about this Privacy Policy, contact us at support@kharchabuddy.com.
         </Text>
-
-        <TouchableOpacity
-          className="w-full bg-blue-500 py-3 rounded-lg"
-          onPress={() => router.back()}
-        >
-          <Text className="text-white text-center font-semibold">Back</Text>
-        </TouchableOpacity>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
