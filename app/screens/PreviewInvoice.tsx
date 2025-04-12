@@ -5,25 +5,9 @@ import RNFS from "react-native-fs";
 import { GOOGLE_VISION_API_KEY } from "@env";
 
 const PreviewInvoice = () => {
-  const [imagedata, setImagedata] = useState(null);
   const [result, setResult] = useState(null);
   const { imageUri }: any = useLocalSearchParams();
   console.log("Image URI:", imageUri); //imageUri is path to image
-
-  // const { imageData } = useImageContext(); 
-  
-  // console.log("Image URI:", imageUri);
-  // const openCamera = async () => {
-  //   const res = await launchCamera({ mediaType: "photo", includeBase64: true });
-  //   console.log(res.assets[0].base64);
-  //   if (!res.didCancel) {
-  //     console.log("Waiting for image processing camera picker");
-  //     setImagedata(res);
-  //     console.log("Image processing camera picker done");
-  //   } else {
-  //     Alert.alert("Eror", "Please try again");
-  //   }
-  // };
 
   const getTextFromImage = async (imageUri: any) => {
     const base64Image = await RNFS.readFile(imageUri, "base64");

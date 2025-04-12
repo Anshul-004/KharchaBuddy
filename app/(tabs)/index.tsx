@@ -20,7 +20,6 @@ const Index = () => {
   const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [animation] = useState(new Animated.Value(0));
-  const [imagedata, setImagedata] = useState(null);
 
   const toggleMenu = () => {
     const toValue = isOpen ? 0 : 1;
@@ -81,24 +80,8 @@ const Index = () => {
         Alert.alert("Eror", "Please try again");
       }
       console.log("Invoice Image URI:", res.assets[0].uri);
-      // setImageData(res.assets[0].base64);
       router.push(`/screens/PreviewInvoice?imageUri=${res.assets[0].uri}`);
     };
-  // const openCamera = async () => {
-  //   const { status } = await ImagePicker.requestCameraPermissionsAsync();
-
-  //   if (status !== "granted") {
-  //     alert("Camera permission is required!");
-  //     return;
-  //   }
-  //   const result = await ImagePicker.launchCameraAsync({
-  //     allowsEditing: false,
-  //     quality: 1,
-  //   });
-  //   if (!result.canceled) {
-      
-  //   }
-  // };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
