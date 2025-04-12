@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "431789125726",
+    "project_id": "kharchabuddy",
+    "storage_bucket": "kharchabuddy.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:431789125726:android:264d2c0560e9190caec4cf",
+        "android_client_info": {
+          "package_name": "com.kharachabuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "431789125726-aut2ktkr7kbn6d1e3p3eer9964sugfa2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kharachabuddy",
+            "certificate_hash": "312526a1167fb2a9495426d60a7411687bff899f"
+          }
+        },
+        {
+          "client_id": "431789125726-qhjaqakbert0dfg30m93j1hjoqgm0mr6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZRehTnx3QqpPo1KR2JjZ72HTdVIUW06I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "431789125726-qhjaqakbert0dfg30m93j1hjoqgm0mr6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "431789125726-hguoihm0gfpngu0cpanse6u9fqank678.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.kharachabuddy"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

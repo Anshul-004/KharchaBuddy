@@ -1,29 +1,104 @@
-// Temporarily created to preview the invoice image, later be deleted
-
-import { View, Text, Image, TouchableOpacity } from 'react-native';
-import React from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation, useLocalSearchParams } from 'expo-router';
+import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
+import React, { useState } from "react";
+import { useLocalSearchParams } from "expo-router";
+import RNFS from "react-native-fs";
+import { GOOGLE_VISION_API_KEY } from "@env";
 
 const PreviewInvoice = () => {
-  const navigation = useNavigation();
-  const { imageUri } = useLocalSearchParams();
+  const [imagedata, setImagedata] = useState(null);
+  const [result, setResult] = useState(null);
+  const { imageUri }: any = useLocalSearchParams();
+  console.log("Image URI:", imageUri); //imageUri is path to image
+
+  // const { imageData } = useImageContext(); 
+  
+  // console.log("Image URI:", imageUri);
+  // const openCamera = async () => {
+  //   const res = await launchCamera({ mediaType: "photo", includeBase64: true });
+  //   console.log(res.assets[0].base64);
+  //   if (!res.didCancel) {
+  //     console.log("Waiting for image processing camera picker");
+  //     setImagedata(res);
+  //     console.log("Image processing camera picker done");
+  //   } else {
+  //     Alert.alert("Eror", "Please try again");
+  //   }
+  // };
+
+  const getTextFromImage = async (imageUri: any) => {
+    const base64Image = await RNFS.readFile(imageUri, "base64");
+    console.log("Base64 Image:", base64Image);
+    const data = {
+      requests: [
+        {
+          image: {
+            content: base64Image  ,
+          },
+          features: [
+            {
+              type: "TEXT_DETECTION",
+              maxResults: 1,
+            },
+          ],
+        },
+      ],
+    };
+    const apiKey = GOOGLE_VISION_API_KEY;
+    console.log("API KEY", apiKey);
+    //works up to here
+    const res = await fetch(
+      `https://vision.googleapis.com/v1/images:annotate?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    // console.log("RESPONSE", res);df
+    const result = await res.json();
+    // console.log("RESULT", result);
+    setResult(result);
+    if (result.responses[0].textAnnotations) {
+      const text = result.responses[0].textAnnotations[0].description;
+      console.log("Extracted Text:", text);
+    }
+    //text has the extracted text
+
+    //identify total amount
+  };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100 items-center justify-center">
-      <Text className="text-xl font-bold mb-5">Preview Invoice</Text>
-      <Image
-        source={{ uri: Array.isArray(imageUri) ? imageUri[0] : imageUri }}
-        className="w-80 h-96 rounded-lg mb-5"
-        resizeMode="contain"
-      />
+    <View>
+      <Text className="text-2xl font-bold">PreviewInvoice</Text>
+      
+      {imageUri && (
+        <Image
+          source={{
+            uri: imageUri,
+          }}
+          style={{ width: 200, height: 200 }}
+        />
+      )}
       <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        className="bg-blue-600 px-4 py-3 rounded-lg"
+        onPress={() => {
+          if (imageUri) {
+            getTextFromImage(imageUri);
+          } else {
+            Alert.alert(
+              "Error",
+              "No image data available. Please capture an image first."
+            );
+          }
+        }}
+        className="bg-blue-500 p-4 rounded-lg"
       >
-        <Text className="text-white font-bold">Go Back</Text>
+        <Text>Get Text From Image</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+      
+    </View>
   );
 };
 

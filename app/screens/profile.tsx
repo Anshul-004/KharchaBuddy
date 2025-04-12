@@ -2,12 +2,12 @@ import { View, Text, Image, SafeAreaView } from 'react-native';
 import React from 'react';
 import { images } from '@/constants/images';
 import { auth as fauth } from '@/FirebaseConfig';
-import auth from "@react-native-firebase/auth";
+import  { getAuth } from "@react-native-firebase/auth";
 
 
 const Profile = () => {
   const userE = fauth.currentUser;
-  const userG = auth().currentUser;
+  const userG = getAuth().currentUser;
   const user = userE || userG; // Use the user from either Firebase Auth or React Native Firebase
   return (
     <SafeAreaView className="flex-1 bg-[#fff]">
