@@ -38,7 +38,7 @@ Kharcha Buddy is a mobile app to help you track your expenses easily. You can ad
 
 1. Clone the repository:
    ```bash
-   git clone <your-kharcha-buddy-repo-url>
+   git clone https://github.com/kalyanipagar18/KharchaBuddy.git
    cd KharchaBuddy
    ```
 
@@ -53,9 +53,13 @@ Kharcha Buddy is a mobile app to help you track your expenses easily. You can ad
    OCR_API_KEY=your_ocr_service_key
    ```
 
+   - Replace `your_mongodb_connection_string` with your MongoDB URI (Atlas or local).
+   - Replace `your_ocr_service_key` with your OCR API key (if using receipt scanning).
+
 4. Start the app:
    ```bash
    npx expo start
    ```
 
    Scan the QR code using Expo Go on your phone.
+
