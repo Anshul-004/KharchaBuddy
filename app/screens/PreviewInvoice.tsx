@@ -1,13 +1,61 @@
 import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocalSearchParams } from "expo-router";
 import RNFS from "react-native-fs";
 import { GOOGLE_VISION_API_KEY } from "@env";
 
 const PreviewInvoice = () => {
   const [result, setResult] = useState(null);
+  const [totalAmount, setTotalAmount] = useState(null);
   const { imageUri }: any = useLocalSearchParams();
-  console.log("Image URI:", imageUri); //imageUri is path to image
+  console.log("Image URI:", imageUri); 
+
+  const extractTotalAmount = (text: string): number | null => {
+    const totalKeywords = [
+      "total",
+      "grand total",
+      "amount due",
+      "balance due",
+      "total amount",
+      "net amount",
+      "net total",
+      "amount payable",
+      "total sale",
+      "sales total"
+    ];
+  
+    const lines = text.split("\n");
+  
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].toLowerCase().replace(/\s+/g, " ").trim();
+  
+      // Check if this line contains any keyword
+      if (totalKeywords.some(keyword => line.includes(keyword))) {
+        // Try to match amount in the same line
+        let match = lines[i].match(/[\*\₹\$\s]*[\d,]+(?:\.\d{1,2})?/);
+  
+        // If not found, try the next line (some receipts have the amount below)
+        if (!match && i + 1 < lines.length) {
+          match = lines[i + 1].match(/[\*\₹\$\s]*[\d,]+(?:\.\d{1,2})?/);
+        }
+  
+        if (match) {
+          const amountStr = match[0].replace(/[^0-9.]/g, ""); // Remove *, ₹, etc.
+          const amountNum : any = parseFloat(amountStr);
+          if (!isNaN(amountNum)) {
+            console.log("Total Amount Found:", amountNum);
+            setTotalAmount(amountNum);
+            return amountNum;
+          }
+        }
+      }
+    }
+  
+    console.log("Total Amount Not Found");
+    return null;
+  };
+  
+  
 
   const getTextFromImage = async (imageUri: any) => {
     const base64Image = await RNFS.readFile(imageUri, "base64");
@@ -16,7 +64,7 @@ const PreviewInvoice = () => {
       requests: [
         {
           image: {
-            content: base64Image  ,
+            content: base64Image,
           },
           features: [
             {
@@ -41,23 +89,31 @@ const PreviewInvoice = () => {
         body: JSON.stringify(data),
       }
     );
-    // console.log("RESPONSE", res);df
+
     const result = await res.json();
-    // console.log("RESULT", result);
     setResult(result);
+    let t1 = "";
     if (result.responses[0].textAnnotations) {
-      const text = result.responses[0].textAnnotations[0].description;
-      console.log("Extracted Text:", text);
+      t1 = result.responses[0].textAnnotations[0].description;
+      console.log("Extracted Text:", t1);
     }
-    //text has the extracted text
-
-    //identify total amount
+    
+    const total : any = extractTotalAmount(t1);
+    setTotalAmount(total);
   };
-
+  
+  
+  
+  useEffect(() => {
+    if (imageUri) {
+      getTextFromImage(imageUri);
+    }
+  }, [imageUri]);
+  
   return (
     <View>
       <Text className="text-2xl font-bold">PreviewInvoice</Text>
-      
+
       {imageUri && (
         <Image
           source={{
@@ -66,22 +122,8 @@ const PreviewInvoice = () => {
           style={{ width: 200, height: 200 }}
         />
       )}
-      <TouchableOpacity
-        onPress={() => {
-          if (imageUri) {
-            getTextFromImage(imageUri);
-          } else {
-            Alert.alert(
-              "Error",
-              "No image data available. Please capture an image first."
-            );
-          }
-        }}
-        className="bg-blue-500 p-4 rounded-lg"
-      >
-        <Text>Get Text From Image</Text>
-      </TouchableOpacity>
-      
+
+      <Text className="text-xl m-3">{totalAmount}</Text>
     </View>
   );
 };
