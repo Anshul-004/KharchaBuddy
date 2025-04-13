@@ -4,24 +4,24 @@ Kharcha Buddy is a mobile app to help you track your expenses easily. You can ad
 
 ---
 
-## 🔧 Features
+# 🔧 Features
 
 - ➕ Add expenses manually with amount, category, and notes  
 - 📷 Scan receipts to auto-fill expense details using OCR  
 - 📂 Organize expenses by category and tags  
 - 📅 View daily, weekly, or monthly summaries  
 - 📊 Get visual breakdowns with simple analytics  
+- 🔐 Secure authentication using Google (Third-party Auth) + Email logins  
+- 🔁 Password reset features for account recovery  
 - 📱 Mobile-friendly design using React Native
 
 ---
 
-## 🛠 Tech Stack
+# 🛠 Tech Stack
 
-- React Native (Expo)  
-- Node.js + Express  
-- MongoDB  
-- OCR: Tesseract.js or Google Vision API  
-- State: Context API or Zustand
+- **Frontend:** React Native (Expo)  
+- **Backend:** SQLite, Firebase (Authentication)  
+- **API:** Google Cloud Vision (OCR)  
 
 ---
 
@@ -31,8 +31,8 @@ Kharcha Buddy is a mobile app to help you track your expenses easily. You can ad
 
 - Node.js and npm  
 - Expo CLI (`npm install -g expo-cli`)  
-- MongoDB (local or Atlas)  
-- OCR API key (if using a third-party service)
+- Firebase project (for authentication)  
+- Google Cloud Vision API Key
 
 ### Installation
 
@@ -47,19 +47,19 @@ Kharcha Buddy is a mobile app to help you track your expenses easily. You can ad
    npm install
    ```
 
-3. Create a `.env` file:
+3. Setup Firebase and Google Cloud Vision API by creating a `.env` file in the root directory:
    ```env
-   MONGODB_URI=your_mongodb_connection_string
-   OCR_API_KEY=your_ocr_service_key
+   FIREBASE_API_KEY=your_firebase_api_key
+   FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+   FIREBASE_PROJECT_ID=your_project_id
+   FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+   FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+   FIREBASE_APP_ID=your_app_id
+   GOOGLE_CLOUD_VISION_API_KEY=your_google_vision_key
    ```
-
-   - Replace `your_mongodb_connection_string` with your MongoDB URI (Atlas or local).
-   - Replace `your_ocr_service_key` with your OCR API key (if using receipt scanning).
 
 4. Start the app:
    ```bash
    npx expo start
    ```
-
-   Scan the QR code using Expo Go on your phone.
 
