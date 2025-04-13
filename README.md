@@ -1,50 +1,65 @@
-# Welcome to your Expo app 👋
+# 💰 Kharcha Buddy
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Kharcha Buddy is a mobile app to help you track your expenses easily. You can add expenses manually or scan receipts to save time. It's built to be simple, fast, and useful for everyday expense management.
 
-## Get started
+---
 
-1. Install dependencies
+# 🔧 Features
 
+- ➕ Add expenses manually with amount, category, and notes  
+- 📷 Scan receipts to auto-fill expense details using OCR  
+- 📂 Organize expenses by category and tags  
+- 📅 View daily, weekly, or monthly summaries  
+- 📊 Get visual breakdowns with simple analytics  
+- 🔐 Secure authentication using Google (Third-party Auth) + Email logins  
+- 🔁 Password reset features for account recovery  
+- 📱 Mobile-friendly design using React Native
+
+---
+
+# 🛠 Tech Stack
+
+- **Frontend:** React Native (Expo)  
+- **Backend:** SQLite, Firebase (Authentication)  
+- **API:** Google Cloud Vision (OCR)  
+
+---
+
+## ⚙️ Getting Started
+
+### Prerequisites
+
+- Node.js and npm  
+- Expo CLI (`npm install -g expo-cli`)  
+- Firebase project (for authentication)  
+- Google Cloud Vision API Key
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/kalyanipagar18/KharchaBuddy.git
+   cd KharchaBuddy
+   ```
+
+2. Install dependencies:
    ```bash
    npm install
    ```
 
-2. Start the app
-
-   ```bash
-    npx expo start
+3. Setup Firebase and Google Cloud Vision API by creating a `.env` file in the root directory:
+   ```env
+   FIREBASE_API_KEY=your_firebase_api_key
+   FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+   FIREBASE_PROJECT_ID=your_project_id
+   FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+   FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+   FIREBASE_APP_ID=your_app_id
+   GOOGLE_CLOUD_VISION_API_KEY=your_google_vision_key
    ```
 
-In the output, you'll find options to open the app in a
+4. Start the app:
+   ```bash
+   npx expo start
+   ```
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
