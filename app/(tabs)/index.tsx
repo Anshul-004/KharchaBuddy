@@ -222,7 +222,7 @@ const Index = () => {
             onPress={() => {
               toggleMenu();
               console.log("Add Manually pressed");
-              // Add manual entry logic here
+              router.push("/screens/ManualInvoice");
             }}
           >
             <FontAwesome5 name="pencil-alt" size={18} color="white" />
