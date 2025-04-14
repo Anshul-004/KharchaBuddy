@@ -15,7 +15,7 @@ import { Invoice } from "../types/databaseSchema";
 const Index = () => {
   const userE = fauth.currentUser;
   const userG = getAuth().currentUser;
-  const user = userE || userG; // Use the user from either Firebase Auth or React Native Firebase
+  const user = userE || userG; 
 
   const navigation = useNavigation();
   const router = useRouter();
@@ -63,15 +63,12 @@ const Index = () => {
       mediaType: "photo",
       includeBase64: true,
     });
-    // console.log(res.assets[0].base64);
+    
     if (!res.didCancel) {
       console.log("Waiting for image processing camera picker");
-      // setImagedata(res);
-      // console.log("Image processing camera picker done");
     } else {
       Alert.alert("Eror", "Please try again");
     }
-    // console.log("Invoice Image URI:", res.assets[0].uri);
     router.push(`/screens/PreviewInvoice?imageUri=${res.assets[0].uri}`);
   };
   const fetchUserExpenses = async (uid: string) => {
@@ -102,7 +99,7 @@ const Index = () => {
     const unsubscribe = fauth.onAuthStateChanged((user) => {
       if (user) {
         console.log("User is Logged In:", user.email);
-        // setUser(user); // Set the user state
+     
         navigation.replace("/(tabs)", { email: user.email });
       } else {
         navigation.replace("/screens/login");
@@ -117,7 +114,7 @@ const Index = () => {
       console.log("Fetching expenses for user:", user.uid);
       fetchUserExpenses(user.uid);
     }
-  }, [user?.uid]); // Trigger fetchUserExpenses when user.uid is available
+  }, [user?.uid]); 
 
   return (
     <SafeAreaView className="flex-1 bg-white">

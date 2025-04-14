@@ -21,6 +21,7 @@ export default function ManualInvoice() {
           const invoiceData = {
             id: user?.uid || "pickachu",
             title: title || category,
+            day:new Date().toLocaleDateString("en-US", { weekday: "short" }),
             amount: totalAmount,
             category: category,
             modeOfPayment: modeOfPayment,

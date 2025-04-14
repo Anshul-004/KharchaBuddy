@@ -31,6 +31,8 @@ export default function RootLayout() {
       <Stack.Screen name="screens/privacy" options={{ headerShown: false, headerTitle: "Privacy Policy"}}  />
       <Stack.Screen name="screens/login" options={{ headerShown: false}}  />
       <Stack.Screen name="screens/register" options={{ headerShown: false}}  />
+      <Stack.Screen name="screens/ManualInvoice" options={{ headerShown: false}}  />
+      <Stack.Screen name="screens/PreviewInvoice" options={{ headerShown: false}}  />
     </Stack>
   );
 }

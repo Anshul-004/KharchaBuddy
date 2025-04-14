@@ -28,7 +28,7 @@ export const fetchExpenses = async (userUid : string) => {
             });
         });
 
-        console.log("Fetched Expenses:", expenses);
+        // console.log("Fetched Expenses:", expenses);
         return expenses;
     } catch (e) {
         console.error("Error fetching expenses:", e);

@@ -5,5 +5,6 @@ export interface Invoice {
     category: string;
     modeOfPayment: string;
     date: string;
+    day:string;
     isPaid: boolean;
 };

@@ -1,45 +1,36 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, SafeAreaView, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { BarChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
+import { fetchExpenses } from '../services/databaseService';
+import { auth as fauth } from "@/FirebaseConfig";
+import { getAuth } from "@react-native-firebase/auth";
+import LoadingIndicator from '../components/LoadingIndicator';
+import { Invoice } from '../types/databaseSchema';
+export default function Expenses() {
+  const userE = fauth.currentUser;
+  const userG = getAuth().currentUser;
+  const user = userE || userG;
 
-export default function App() {
+
   const [activeTab, setActiveTab] = useState('weekly');
-  const fadeAnim = useRef(new Animated.Value(1)).current;
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-  
-  // Dummy data
-  const data = {
+  const [loading, setLoading] = useState(false);
+  const [expenses, setExpenses] = useState<Invoice[]>([]);
+  const [data, setChartData] = useState({
     weekly: {
-      labels: ['Wed', 'Tue', 'Mon', 'Sun', 'Sat', 'Fri', 'Thu'],
-      datasets: [
-        {
-          data: [2, 1, 18, 10, 2, 35, 20],
-          
-        }
-      ]
-    },
-    monthly: {
-      labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-      datasets: [
-        {
-          data: [45, 28, 32, 50],
-          
-        }
-      ]
+      labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      datasets: [{ data: [0, 0, 0, 0, 0, 0, 0] }],
     },
     yearly: {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-      datasets: [
-        {
-          data: [120, 100, 145, 115, 110, 135, 185, 140, 160, 130, 215, 175],
-          
-        }
-      ]
-    }
-  };
+      labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      datasets: [{ data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }],
+    },
+  });
+    
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const scaleAnim = useRef(new Animated.Value(1)).current;
 
   // Chart Configuration
   const getChartConfig = () => {
@@ -80,23 +71,6 @@ export default function App() {
     };
   };
 
-  const renderCustomBar = ({ index, value, width, height, x, y }: any) => {
-    
-    return (
-      <View 
-        key={index}
-        style={{
-          position: 'absolute',
-          bottom: y(0),
-          left: x(index) - (width / 2),
-          width: width,
-          height: y(0) - y(value),
-          borderRadius: 8,
-        }}
-      />
-    );
-  };
-
   const handleTabChange = (tab: any) => {
     if (tab === activeTab) return;
     
@@ -131,6 +105,118 @@ export default function App() {
       ]).start();
     });
   };
+  const fetchUserExpenses = async (uid: string) => {
+      try {
+        if (user?.uid) {
+          console.log("User ID:", uid);
+          const userExpenses = await fetchExpenses(uid);
+          console.log("Fetched User Expenses:", userExpenses);
+          setExpenses(userExpenses); 
+
+        } else {
+          console.error("User is not authenticated.");
+        }
+      } catch (error) {
+        console.error("Error fetching user expenses:", error);
+      } finally {
+        setLoading(false); 
+      }
+    };
+    if (loading) {
+      return <LoadingIndicator />;
+    }
+  useEffect(() => {
+      if (user?.uid) {
+        console.log("Fetching expenses for user:", user.uid);
+        fetchUserExpenses(user.uid);
+      }
+    }, [user?.uid]);
+
+    //grouping for charts
+    const groupByDay = (expenses : Invoice[]) => {
+      const dailyTotals : Record<string, number> = {};
+    
+      expenses.forEach((expense) => {
+        const day = expense.day; 
+        const amount = parseFloat(expense.amount) || 0;
+    
+        if (!dailyTotals[day]) {
+          dailyTotals[day] = 0;
+        }
+        dailyTotals[day] += amount;
+      });
+    
+      return dailyTotals;
+    };
+    
+    const groupByMonth = (expenses : Invoice[]) => {
+      const monthlyTotals : Record<string, number> = {};
+    
+      expenses.forEach((expense ) => {
+        const date = new Date(expense.date); 
+        const month = date.toLocaleString("default", { month: "short" }); 
+        const amount = parseFloat(expense.amount) || 0;
+    
+        if (!monthlyTotals[month]) {
+          monthlyTotals[month] = 0;
+        }
+        monthlyTotals[month] += amount;
+      });
+    
+      return monthlyTotals;
+    };
+    //data here.
+    useEffect(() => {
+  if (expenses.length > 0) {
+    // Group by day
+    const dailyTotals = groupByDay(expenses);
+    const weeklyData = Object.keys(dailyTotals).map((day) => dailyTotals[day]);
+
+    // Group by month
+    const monthlyTotals = groupByMonth(expenses);
+    const yearlyData = Object.keys(monthlyTotals).map((month) => monthlyTotals[month]);
+
+    // Update chart data
+    setChartData({
+      weekly: {
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], // Adjust labels as needed
+        datasets: [
+          {
+            data: weeklyData,
+          },
+        ],
+      },
+      yearly: {
+        labels: Object.keys(monthlyTotals), // e.g., ["Jan", "Feb", "Mar"]
+        datasets: [
+          {
+            data: yearlyData,
+          },
+        ],
+      },
+    });
+  }
+}, [expenses]);
+    // const data = {
+    //   weekly: {
+    //     labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    //     datasets: [
+    //       {
+    //         data: [2, 1, 18, 10, 2, 35, 20],
+            
+    //       }
+    //     ]
+    //   },
+    //   yearly: {
+    //     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    //     datasets: [
+    //       {
+    //         data: [120, 100, 145, 200, 150, 300, 250, 400, 350, 500, 450, 600],
+            
+    //       }
+    //     ]
+    //   }
+    // };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -147,12 +233,6 @@ export default function App() {
               onPress={() => handleTabChange('weekly')}
             >
               <Text className={`text-center font-medium ${activeTab === 'weekly' ? 'text-black' : 'text-gray-600'}`}>Weekly</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              className={`flex-1 py-2 rounded-full ${activeTab === 'monthly' ? 'bg-white' : ''}`}
-              onPress={() => handleTabChange('monthly')}
-            >
-              <Text className={`text-center font-medium ${activeTab === 'monthly' ? 'text-black' : 'text-gray-600'}`}>Monthly</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               className={`flex-1 py-2 rounded-full ${activeTab === 'yearly' ? 'bg-white' : ''}`}
