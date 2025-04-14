@@ -71,15 +71,15 @@ const Index = () => {
   //Camera function
   const openCamera = async () => {
       const res:any = await launchCamera({ mediaType: "photo", includeBase64: true });
-      console.log(res.assets[0].base64);
+      // console.log(res.assets[0].base64);
       if (!res.didCancel) {
         console.log("Waiting for image processing camera picker");
         // setImagedata(res);
-        console.log("Image processing camera picker done");
+        // console.log("Image processing camera picker done");
       } else {
         Alert.alert("Eror", "Please try again");
       }
-      console.log("Invoice Image URI:", res.assets[0].uri);
+      // console.log("Invoice Image URI:", res.assets[0].uri);
       router.push(`/screens/PreviewInvoice?imageUri=${res.assets[0].uri}`);
     };
 

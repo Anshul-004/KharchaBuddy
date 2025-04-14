@@ -3,26 +3,25 @@ import React, { useState, useEffect } from "react";
 import { useLocalSearchParams } from "expo-router";
 import RNFS from "react-native-fs";
 import { GOOGLE_VISION_API_KEY } from "@env";
+import { addInvoice } from "../services/databaseService";
+import { auth as fauth } from "@/FirebaseConfig";
+import  { getAuth } from "@react-native-firebase/auth";
+import { Picker } from "@react-native-picker/picker";
 
 const PreviewInvoice = () => {
+  const userE = fauth.currentUser;
+  const userG = getAuth().currentUser;
+  const user = userE || userG;
   const [result, setResult] = useState(null);
+  const [category, setCategory] = useState("");
+  const [modeOfPayment, setModeOfPayment] = useState("");
   const [totalAmount, setTotalAmount] = useState(null);
   const { imageUri }: any = useLocalSearchParams();
-  console.log("Image URI:", imageUri); 
+  // console.log("Image URI:", imageUri); 
 
   const extractTotalAmount = (text: string): number | null => {
     const totalKeywords = [
-      "total",
-      "grand total",
-      "amount due",
-      "balance due",
-      "total amount",
-      "net amount",
-      "net total",
-      "amount payable",
-      "total sale",
-      "sales total"
-    ];
+      "total", "grand total", "amount due", "balance due", "total amount", "net amount", "net total", "amount payable", "total sale", "sales total" ];
   
     const lines = text.split("\n");
   
@@ -102,8 +101,25 @@ const PreviewInvoice = () => {
     setTotalAmount(total);
   };
   
-  
-  
+  const handleSaveInvoice = async () => {
+    console.log("UID ",user?.uid);
+    if (totalAmount) {
+      const invoiceData = {
+        id: user?.uid || "pickachu",
+        amount: totalAmount,
+        category: category,
+        modeOfPayment: modeOfPayment,
+        date: new Date().toISOString(),
+        isPaid: true,
+      };
+      console.log("Invoice Data:", invoiceData);
+      const resp = await addInvoice(invoiceData);
+      console.log("Invoice saved:", resp);
+      // Alert.alert("Invoice saved successfully!");
+    } else {
+      Alert.alert("No total amount found to save.");
+    }
+  };
   useEffect(() => {
     if (imageUri) {
       getTextFromImage(imageUri);
@@ -123,7 +139,36 @@ const PreviewInvoice = () => {
         />
       )}
 
-      <Text className="text-xl m-3">{totalAmount}</Text>
+      <Text className="text-xl m-3">Total Inovoice Amount is : {totalAmount}</Text>
+
+      <Text className="text-xl m-3">Category</Text>
+      <Picker
+        selectedValue={category}
+        onValueChange={(itemValue : string) => setCategory(itemValue)}
+        style={{ height: 50, width: 200 }}
+      >
+        <Picker.Item label="Misc" value="misc" />
+        <Picker.Item label="Travel" value="travel" />
+        <Picker.Item label="Shopping" value="shopping" />
+      </Picker>
+
+      <Text className="text-xl m-3">Mode of Payment</Text>
+      <Picker
+        selectedValue={modeOfPayment}
+        onValueChange={(itemValue : string) => setModeOfPayment(itemValue)}
+        style={{ height: 50, width: 200 }}
+      >
+        <Picker.Item label="Cash" value="cash" />
+        <Picker.Item label="Card" value="card" />
+      </Picker>
+
+      <TouchableOpacity
+        onPress={handleSaveInvoice}
+        className="bg-blue-500 p-3 rounded-md"
+      >
+        <Text className="text-white text-center">Save Invoice</Text>
+      </TouchableOpacity>
+
     </View>
   );
 };

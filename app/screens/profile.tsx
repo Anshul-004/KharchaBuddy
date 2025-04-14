@@ -31,7 +31,7 @@ const Profile = () => {
                 <Text className="text-sm text-gray-500 mb-1">Name</Text>
                 <View className="bg-gray-50 rounded-xl p-4">
                   {/* display user's name here */}
-                  <Text className="text-lg font-semibold text-gray-800"> {user?.displayName || "Stupid Person"}</Text>
+                  <Text className="text-lg font-semibold text-gray-800"> {user?.displayName || "Ash Ketchum"}</Text>
                 </View>
               </View>
               
