@@ -113,9 +113,9 @@ const PreviewInvoice = () => {
         isPaid: true,
       };
       console.log("Invoice Data:", invoiceData);
-      const resp = await addInvoice(invoiceData);
-      console.log("Invoice saved:", resp);
-      // Alert.alert("Invoice saved successfully!");
+      await addInvoice(invoiceData);
+      console.log("Invoice saved:");
+      Alert.alert("Invoice saved successfully!");
     } else {
       Alert.alert("No total amount found to save.");
     }

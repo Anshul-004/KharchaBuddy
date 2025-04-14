@@ -6,7 +6,6 @@ export const addInvoice = async (invoiceData : Invoice) => {
     try {
         const docRef = await addDoc(collection(db, "userExpenses"), invoiceData);
         console.log("REFDOC",docRef)
-        console.log("Document written with ID: ");
     } catch (e) {
         console.error("Error adding document: ", e);
     }
