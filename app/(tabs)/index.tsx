@@ -1,25 +1,41 @@
-import {View, Text, ScrollView, TouchableOpacity, Animated, Image, Alert, } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Animated,
+  Image,
+  Alert,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigation, useRouter } from "expo-router";
 import { useState } from "react";
 import { images } from "@/constants/images";
 import LoadingIndicator from "../components/LoadingIndicator";
-import { Ionicons, MaterialCommunityIcons, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  FontAwesome5,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { launchCamera } from "react-native-image-picker";
 import { auth as fauth } from "@/FirebaseConfig";
-import  { getAuth } from "@react-native-firebase/auth";
+import { getAuth } from "@react-native-firebase/auth";
+import { fetchExpenses } from "../services/databaseService";
 
 const Index = () => {
   const userE = fauth.currentUser;
   const userG = getAuth().currentUser;
   const user = userE || userG; // Use the user from either Firebase Auth or React Native Firebase
-  
+
   const navigation = useNavigation();
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [animation] = useState(new Animated.Value(0));
+  const [expenses, setExpenses] = useState([]);
+  const [totalExpenses, setTotalExpenses] = useState(0);
 
   const toggleMenu = () => {
     const toValue = isOpen ? 0 : 1;
@@ -49,39 +65,71 @@ const Index = () => {
     outputRange: ["0deg", "45deg"],
   });
 
-  // Check if the user is logged in and navigate accordingly
-  React.useEffect(() => {
-    const unsubscribe = fauth.onAuthStateChanged((user) => {
-      if (user) {
-        console.log("User is Logged In:", user.email);
-        navigation.replace("/(tabs)", { email: user.email });
-      } else {
-        navigation.replace("/screens/login");
-      }
-      setLoading(false);
-    });
-
-    return unsubscribe;
-  }, []);
-
   if (loading) {
     return <LoadingIndicator />;
   }
 
   //Camera function
   const openCamera = async () => {
-      const res:any = await launchCamera({ mediaType: "photo", includeBase64: true });
-      // console.log(res.assets[0].base64);
-      if (!res.didCancel) {
-        console.log("Waiting for image processing camera picker");
-        // setImagedata(res);
-        // console.log("Image processing camera picker done");
+    const res: any = await launchCamera({
+      mediaType: "photo",
+      includeBase64: true,
+    });
+    // console.log(res.assets[0].base64);
+    if (!res.didCancel) {
+      console.log("Waiting for image processing camera picker");
+      // setImagedata(res);
+      // console.log("Image processing camera picker done");
+    } else {
+      Alert.alert("Eror", "Please try again");
+    }
+    // console.log("Invoice Image URI:", res.assets[0].uri);
+    router.push(`/screens/PreviewInvoice?imageUri=${res.assets[0].uri}`);
+  };
+  const fetchUserExpenses = async (uid: string) => {
+    try {
+      if (user?.uid) {
+        console.log("User ID:", uid);
+        const userExpenses = await fetchExpenses(uid);
+        console.log("Fetched User Expenses:", userExpenses);
+        setExpenses(userExpenses); // Update the expenses state
+
+        // Calculate total expenses
+        const total = userExpenses.reduce(
+          (sum: Number, expense: any) => sum + expense.amount,
+          0
+        );
+        setTotalExpenses(total);
       } else {
-        Alert.alert("Eror", "Please try again");
+        console.error("User is not authenticated.");
       }
-      // console.log("Invoice Image URI:", res.assets[0].uri);
-      router.push(`/screens/PreviewInvoice?imageUri=${res.assets[0].uri}`);
-    };
+    } catch (error) {
+      console.error("Error fetching user expenses:", error);
+    } finally {
+      setLoading(false); // Stop loading once data is fetched
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = fauth.onAuthStateChanged((user) => {
+      if (user) {
+        console.log("User is Logged In:", user.email);
+        // setUser(user); // Set the user state
+        navigation.replace("/(tabs)", { email: user.email });
+      } else {
+        navigation.replace("/screens/login");
+      }
+    });
+  
+    return unsubscribe;
+  }, []);
+  
+  useEffect(() => {
+    if (user?.uid) {
+      console.log("Fetching expenses for user:", user.uid);
+      fetchUserExpenses(user.uid);
+    }
+  }, [user?.uid]); // Trigger fetchUserExpenses when user.uid is available
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -110,85 +158,56 @@ const Index = () => {
               <Text className="text-gray-600 ml-1">Total Expense:</Text>
             </View>
 
-            <Text className="text-red-500 text-xl font-semibold">
-              $ 1830.00
+            <Text className="text-red-400 text-xl font-semibold">
+              ₹ {totalExpenses}
             </Text>
           </View>
         </View>
 
-        {/* Recent Transactions, map the scanned invoice data here, for now dummy data is placed */}
+        {/* </View> */}
         <View className="px-4 mt-6 mb-10">
           <Text className="text-gray-900 text-xl font-semibold mb-4">
             Recent Transactions
           </Text>
 
-          <View className="bg-white rounded-2xl p-4 mb-3 flex-row items-center shadow-sm">
-            <View className="w-12 h-12 bg-red-400 rounded-full items-center justify-center mr-3">
-              <FontAwesome5 name="heartbeat" size={20} color="white" />
-            </View>
-            <View className="flex-1">
-              <View className="flex-row justify-between">
-                <Text className="text-gray-800 text-lg">Health</Text>
-                <Text className="text-red-500 text-lg font-medium">- $30</Text>
+          {expenses.length > 0 ? (
+            expenses.map((expense, index) => (
+              <View
+                key={index} // Use `id` if available, otherwise fallback to `index`
+                className="bg-white rounded-2xl p-4 mb-3 flex-row items-center shadow-sm"
+              >
+                <View className="w-12 h-12 bg-blue-500 rounded-full items-center justify-center mr-3">
+                  <MaterialCommunityIcons
+                    name="receipt"
+                    size={20}
+                    color="white"
+                  />
+                </View>
+                <View className="flex-1">
+                  <View className="flex-row justify-between">
+                    <Text className="text-gray-800 text-lg">
+                      {expense.category}
+                    </Text>
+                    <Text className="text-red-500 text-lg font-medium">
+                      ₹ {parseFloat(expense.amount).toFixed(2)}
+                    </Text>
+                  </View>
+                  <View className="flex-row justify-between mt-1">
+                    <Text className="text-gray-500">
+                      {expense.modeOfPayment}
+                    </Text>
+                    <Text className="text-gray-500">
+                      {new Date(expense.date).toLocaleDateString()}
+                    </Text>
+                  </View>
+                </View>
               </View>
-              <View className="flex-row justify-between mt-1">
-                <Text className="text-gray-500">checkup fee</Text>
-                <Text className="text-gray-500">10 Apr</Text>
-              </View>
-            </View>
-          </View>
-
-          <View className="bg-white rounded-2xl p-4 mb-3 flex-row items-center shadow-sm">
-            <View className="w-12 h-12 bg-green-500 rounded-full items-center justify-center mr-3">
-              <FontAwesome5 name="car" size={20} color="white" />
-            </View>
-            <View className="flex-1">
-              <View className="flex-row justify-between">
-                <Text className="text-gray-800 text-lg">Travel</Text>
-                <Text className="text-red-600 text-lg font-medium">- $120</Text>
-              </View>
-              <View className="flex-row justify-between mt-1">
-                <Text className="text-gray-500">Goa Trip</Text>
-                <Text className="text-gray-500">10 Apr</Text>
-              </View>
-            </View>
-          </View>
-
-          <View className="bg-white rounded-2xl p-4 mb-3 flex-row items-center shadow-sm">
-            <View className="w-12 h-12 bg-amber-500 rounded-full items-center justify-center mr-3">
-              <MaterialCommunityIcons
-                name="lightning-bolt"
-                size={20}
-                color="white"
-              />
-            </View>
-            <View className="flex-1">
-              <View className="flex-row justify-between">
-                <Text className="text-gray-800 text-lg">Utilities</Text>
-                <Text className="text-red-500 text-lg font-medium">- $25</Text>
-              </View>
-              <View className="flex-row justify-between mt-1">
-                <Text className="text-gray-500">Electricity bill</Text>
-                <Text className="text-gray-500">10 Apr</Text>
-              </View>
-            </View>
-          </View>
-
-          <View className="bg-white rounded-2xl p-4 mb-3 flex-row items-center shadow-sm">
-            <View className="w-12 h-12 bg-yellow-500 rounded-full items-center justify-center mr-3">
-              <MaterialCommunityIcons name="food" size={20} color="white" />
-            </View>
-            <View className="flex-1">
-              <View className="flex-row justify-between">
-                <Text className="text-gray-800 text-lg">Food</Text>
-                <Text className="text-red-500 text-lg font-medium"> $35</Text>
-              </View>
-              <View className="flex-row justify-between mt-1">
-                <Text className="text-gray-500">Dinner bill</Text>
-                <Text className="text-gray-500">10 Apr</Text>
-              </View>
-            </View>
-          </View>
+            ))
+          ) : (
+            <Text className="text-gray-500 text-center mt-4">
+              No recent transactions found.
+            </Text>
+          )}
         </View>
       </ScrollView>
 

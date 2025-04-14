@@ -9,11 +9,11 @@ export default function ManualInvoice() {
     const userE = fauth.currentUser;
     const userG = getAuth().currentUser;
     const user = userE || userG;
-
-    const [category, setCategory] = useState("")
-    const [modeOfPayment, setModeOfPayment] = useState("")
-    const [totalAmount, setTotalAmount] = useState(69)
     
+    const [category, setCategory] = useState("misc")
+    const [modeOfPayment, setModeOfPayment] = useState("cash")
+    const [totalAmount, setTotalAmount] = useState(69)
+
     const handleSaveInvoice = async () => {
         console.log("UID ",user?.uid);
         if (totalAmount) {
@@ -42,15 +42,14 @@ export default function ManualInvoice() {
             placeholder="Enter Total Amount"
             keyboardType="numeric"
             className="border border-gray-300 p-2 rounded-md m-3"
-            value={totalAmount}
-            onChangeText={setTotalAmount}
+            value={totalAmount.toString()}
+            onChangeText={(value) => setTotalAmount(parseFloat(value) || 0) }
         />
       <Text className="text-xl m-3">Category</Text>
       <Picker
         selectedValue={category}
         onValueChange={(itemValue : string) => setCategory(itemValue)}
-        style={{ height: 50, width: 200 }}
-      >
+        style={{ height: 50, width: 200 }}>
         <Picker.Item label="Misc" value="misc" />
         <Picker.Item label="Travel" value="travel" />
         <Picker.Item label="Shopping" value="shopping" />
@@ -60,16 +59,14 @@ export default function ManualInvoice() {
       <Picker
         selectedValue={modeOfPayment}
         onValueChange={(itemValue : string) => setModeOfPayment(itemValue)}
-        style={{ height: 50, width: 200 }}
-      >
+        style={{ height: 50, width: 200 }}>
         <Picker.Item label="Cash" value="cash" />
         <Picker.Item label="Card" value="card" />
       </Picker>
 
       <TouchableOpacity
         onPress={handleSaveInvoice}
-        className="bg-blue-500 p-3 rounded-md"
-      >
+        className="bg-blue-500 p-3 rounded-md">
         <Text className="text-white text-center">Save Invoice</Text>
       </TouchableOpacity>
 
