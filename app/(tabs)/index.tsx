@@ -1,28 +1,16 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  Animated,
-  Image,
-  Alert,
-} from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Animated, Image, Alert, } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useEffect } from "react";
 import { useNavigation, useRouter } from "expo-router";
 import { useState } from "react";
 import { images } from "@/constants/images";
 import LoadingIndicator from "../components/LoadingIndicator";
-import {
-  Ionicons,
-  MaterialCommunityIcons,
-  FontAwesome5,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons, FontAwesome5, MaterialIcons, } from "@expo/vector-icons";
 import { launchCamera } from "react-native-image-picker";
 import { auth as fauth } from "@/FirebaseConfig";
 import { getAuth } from "@react-native-firebase/auth";
 import { fetchExpenses } from "../services/databaseService";
+import { Invoice } from "../types/databaseSchema";
 
 const Index = () => {
   const userE = fauth.currentUser;
@@ -34,7 +22,7 @@ const Index = () => {
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [animation] = useState(new Animated.Value(0));
-  const [expenses, setExpenses] = useState([]);
+  const [expenses, setExpenses] = useState<Invoice[]>([]);
   const [totalExpenses, setTotalExpenses] = useState(0);
 
   const toggleMenu = () => {
@@ -173,7 +161,7 @@ const Index = () => {
           {expenses.length > 0 ? (
             expenses.map((expense, index) => (
               <View
-                key={index} // Use `id` if available, otherwise fallback to `index`
+                key={index}
                 className="bg-white rounded-2xl p-4 mb-3 flex-row items-center shadow-sm"
               >
                 <View className="w-12 h-12 bg-blue-500 rounded-full items-center justify-center mr-3">

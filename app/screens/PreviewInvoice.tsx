@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
+import { View, Text, Image, TouchableOpacity, Alert, TextInput } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useLocalSearchParams } from "expo-router";
 import RNFS from "react-native-fs";
@@ -17,6 +17,7 @@ const PreviewInvoice = () => {
   const [modeOfPayment, setModeOfPayment] = useState("");
   const [totalAmount, setTotalAmount] = useState(null);
   const { imageUri }: any = useLocalSearchParams();
+  const [title, setTitle] = useState("");
   // console.log("Image URI:", imageUri); 
 
   const extractTotalAmount = (text: string): number | null => {
@@ -106,6 +107,7 @@ const PreviewInvoice = () => {
     if (totalAmount) {
       const invoiceData = {
         id: user?.uid || "pickachu",
+        title: title || category,
         amount: totalAmount,
         category: category,
         modeOfPayment: modeOfPayment,
@@ -137,10 +139,15 @@ const PreviewInvoice = () => {
           }}
           style={{ width: 200, height: 200 }}
         />
-      )}
+      )} 
 
       <Text className="text-xl m-3">Total Inovoice Amount is : {totalAmount}</Text>
-
+      <TextInput
+                  placeholder="Enter Title"
+                  className="border border-gray-300 p-2 rounded-md m-3"
+                  value={title}
+                  onChangeText={(value) => setTitle(value) }
+              />
       <Text className="text-xl m-3">Category</Text>
       <Picker
         selectedValue={category}

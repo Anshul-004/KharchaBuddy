@@ -13,12 +13,14 @@ export default function ManualInvoice() {
     const [category, setCategory] = useState("misc")
     const [modeOfPayment, setModeOfPayment] = useState("cash")
     const [totalAmount, setTotalAmount] = useState(69)
+    const [title, setTitle] = useState("")
 
     const handleSaveInvoice = async () => {
         console.log("UID ",user?.uid);
         if (totalAmount) {
           const invoiceData = {
             id: user?.uid || "pickachu",
+            title: title || category,
             amount: totalAmount,
             category: category,
             modeOfPayment: modeOfPayment,
@@ -44,6 +46,12 @@ export default function ManualInvoice() {
             className="border border-gray-300 p-2 rounded-md m-3"
             value={totalAmount.toString()}
             onChangeText={(value) => setTotalAmount(parseFloat(value) || 0) }
+        />
+        <TextInput
+            placeholder="Enter Title"
+            className="border border-gray-300 p-2 rounded-md m-3"
+            value={title}
+            onChangeText={(value) => setTitle(value) }
         />
       <Text className="text-xl m-3">Category</Text>
       <Picker
