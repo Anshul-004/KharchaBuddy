@@ -9,8 +9,10 @@ import bell from "@/assets/icons/bell.png";
 import money from "@/assets/icons/money.png";
 import google from "@/assets/icons/google.png";
 import github from "@/assets/icons/github.png";
-
-
+import food from "@/assets/icons/food.png";
+import transport from "@/assets/icons/transport.png";
+import utilities from "@/assets/icons/utilities.png";
+import shopping from "@/assets/icons/shopping.png";
 
 export const icons = {
   home,
@@ -24,4 +26,8 @@ export const icons = {
   money,
   google,
   github,
+  food,
+  transport,
+  shopping,
+  utilities
 };

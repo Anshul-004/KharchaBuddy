@@ -11,6 +11,7 @@ import { auth as fauth } from "@/FirebaseConfig";
 import { getAuth } from "@react-native-firebase/auth";
 import { fetchExpenses } from "../services/databaseService";
 import { Invoice } from "../types/databaseSchema";
+import { icons } from "@/constants/icons";
 
 const Index = () => {
   const userE = fauth.currentUser;
@@ -163,12 +164,18 @@ const Index = () => {
                 key={index}
                 className="bg-white rounded-2xl p-4 mb-3 flex-row items-center shadow-sm"
               >
-                <View className="w-12 h-12 bg-blue-500 rounded-full items-center justify-center mr-3">
-                  <MaterialCommunityIcons
+                <View className="w-12 h-12 bg-blue-300 rounded-full items-center justify-center mr-3">
+                  {/* <MaterialCommunityIcons
                     name={expense.category}
                     size={20}
                     color="white"
-                  />
+                  /> */}
+                  <Image
+                    source={icons[expense.category]}
+                    // className="w-10 h-10 rounded-full"
+                    // resizeMode="contain" 
+                    
+                    />
                 </View>
                 <View className="flex-1">
                   <View className="flex-row justify-between">
