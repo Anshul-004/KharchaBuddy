@@ -73,6 +73,7 @@ const Index = () => {
   };
   const fetchUserExpenses = async (uid: string) => {
     try {
+      
       if (user?.uid) {
         console.log("User ID:", uid);
         const userExpenses = await fetchExpenses(uid);
@@ -113,6 +114,7 @@ const Index = () => {
     if (user?.uid) {
       console.log("Fetching expenses for user:", user.uid);
       fetchUserExpenses(user.uid);
+      // setLoading(false);
     }
   }, [user?.uid]); 
 
@@ -163,7 +165,7 @@ const Index = () => {
               >
                 <View className="w-12 h-12 bg-blue-500 rounded-full items-center justify-center mr-3">
                   <MaterialCommunityIcons
-                    name="receipt"
+                    name={expense.category}
                     size={20}
                     color="white"
                   />
@@ -171,7 +173,7 @@ const Index = () => {
                 <View className="flex-1">
                   <View className="flex-row justify-between">
                     <Text className="text-gray-800 text-lg">
-                      {expense.category}
+                      {expense.title || expense.category}
                     </Text>
                     <Text className="text-red-500 text-lg font-medium">
                       ₹ {parseFloat(expense.amount).toFixed(2)}
