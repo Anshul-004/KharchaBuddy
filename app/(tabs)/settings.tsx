@@ -1,10 +1,10 @@
-import { View, Text, TouchableOpacity, SafeAreaView, Alert } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Ionicons } from '@expo/vector-icons';
 import { auth } from "@/FirebaseConfig"; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface SettingItemProps {
   title: string;
@@ -30,8 +30,6 @@ const Settings = () => {
           onPress: async() => {
            try {
                  await auth.signOut(); 
-                 // once user signs out, remove the onboarding flag
-                 // to show onboarding again when user logs in next time
                  await AsyncStorage.removeItem('hasOnboarded');
                  console.log('Onboarding reset successfully');
                  console.log('User signed out successfully');

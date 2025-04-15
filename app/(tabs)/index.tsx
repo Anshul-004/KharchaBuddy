@@ -165,16 +165,9 @@ const Index = () => {
                 className="bg-white rounded-2xl p-4 mb-3 flex-row items-center shadow-sm"
               >
                 <View className="w-12 h-12 bg-blue-300 rounded-full items-center justify-center mr-3">
-                  {/* <MaterialCommunityIcons
-                    name={expense.category}
-                    size={20}
-                    color="white"
-                  /> */}
+                  
                   <Image
                     source={icons[expense.category]}
-                    // className="w-10 h-10 rounded-full"
-                    // resizeMode="contain" 
-                    
                     />
                 </View>
                 <View className="flex-1">
