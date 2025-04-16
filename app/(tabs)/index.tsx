@@ -145,12 +145,15 @@ const Index = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <ScrollView className="flex-1">
+      <ScrollView className="flex-1"
+      contentContainerStyle={{ paddingBottom: 100 }}
+      keyboardShouldPersistTaps="handled"
+      >
         {/* Header */}
         <View className="flex-row items-center justify-between bg-white shadow-sm">
           <Image source={images.logo} className="w-24 h-24 rounded-2xl ml-3" />
-          <TouchableOpacity className="right-10 w-10 h-10 bg-gray-200 rounded-full items-center justify-center">
-            <Ionicons name="search" size={22} color="#333" />
+          <TouchableOpacity className="right-10 w-10 h-10 rounded-full items-center justify-center">
+            <Image source={user?.photoURL ? { uri: user.photoURL } : images.profile} />
           </TouchableOpacity>
         </View>
 

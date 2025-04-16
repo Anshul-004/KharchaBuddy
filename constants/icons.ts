@@ -13,6 +13,9 @@ import food from "@/assets/icons/food.png";
 import transport from "@/assets/icons/transport.png";
 import utilities from "@/assets/icons/utilities.png";
 import shopping from "@/assets/icons/shopping.png";
+import other from "@/assets/icons/other.png";
+import healthcare from "@/assets/icons/healthcare.png";
+import entertainment from "@/assets/icons/entertainment.png";
 
 export const icons = {
   home,
@@ -28,6 +31,9 @@ export const icons = {
   github,
   food,
   transport,
+  utilities,
+  entertainment,
   shopping,
-  utilities
+  healthcare,
+  other,
 };
