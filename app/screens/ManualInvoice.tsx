@@ -16,9 +16,9 @@ export default function ManualInvoice() {
   const router = useRouter();
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [category, setCategory] = useState("misc");
+  const [category, setCategory] = useState("others");
   const [modeOfPayment, setModeOfPayment] = useState("cash");
-  const [totalAmount, setTotalAmount] = useState(69);
+  const [totalAmount, setTotalAmount] = useState(50);
   const [title, setTitle] = useState("");
 
   const handleSaveInvoice = async () => {

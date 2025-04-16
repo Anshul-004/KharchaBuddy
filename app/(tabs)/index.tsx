@@ -1,12 +1,25 @@
-import { View, Text, ScrollView, TouchableOpacity, Animated, Image, Alert, } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Animated,
+  Image,
+  Alert,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import React, { useEffect } from "react";
 import { useNavigation, useRouter } from "expo-router";
 import { useState } from "react";
 import { images } from "@/constants/images";
 import LoadingIndicator from "../components/LoadingIndicator";
-import { Ionicons, MaterialCommunityIcons, FontAwesome5, MaterialIcons, } from "@expo/vector-icons";
-import { launchCamera } from "react-native-image-picker";
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  FontAwesome5,
+  MaterialIcons,
+} from "@expo/vector-icons";
+import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import { auth as fauth } from "@/FirebaseConfig";
 import { getAuth } from "@react-native-firebase/auth";
 import { fetchExpenses } from "../services/databaseService";
@@ -16,7 +29,7 @@ import { icons } from "@/constants/icons";
 const Index = () => {
   const userE = fauth.currentUser;
   const userG = getAuth().currentUser;
-  const user = userE || userG; 
+  const user = userE || userG;
 
   const navigation = useNavigation();
   const router = useRouter();
@@ -25,6 +38,18 @@ const Index = () => {
   const [animation] = useState(new Animated.Value(0));
   const [expenses, setExpenses] = useState<Invoice[]>([]);
   const [totalExpenses, setTotalExpenses] = useState(0);
+  const openGallery = async () => {
+    const result: any = await launchImageLibrary({
+      mediaType: "photo",
+      includeBase64: true,
+    });
+    if (!result.didCancel) {
+      console.log("Waiting for image processing camera picker");
+    } else {
+      Alert.alert("Eror", "Please try again");
+    }
+    router.push(`/screens/PreviewInvoice?imageUri=${result.assets[0].uri}`);
+  };
 
   const toggleMenu = () => {
     const toValue = isOpen ? 0 : 1;
@@ -64,7 +89,7 @@ const Index = () => {
       mediaType: "photo",
       includeBase64: true,
     });
-    
+
     if (!res.didCancel) {
       console.log("Waiting for image processing camera picker");
     } else {
@@ -74,7 +99,6 @@ const Index = () => {
   };
   const fetchUserExpenses = async (uid: string) => {
     try {
-      
       if (user?.uid) {
         console.log("User ID:", uid);
         const userExpenses = await fetchExpenses(uid);
@@ -101,23 +125,23 @@ const Index = () => {
     const unsubscribe = fauth.onAuthStateChanged((user) => {
       if (user) {
         console.log("User is Logged In:", user.email);
-     
+
         navigation.replace("/(tabs)", { email: user.email });
       } else {
         navigation.replace("/screens/login");
       }
     });
-  
+
     return unsubscribe;
   }, []);
-  
+
   useEffect(() => {
     if (user?.uid) {
       console.log("Fetching expenses for user:", user.uid);
       fetchUserExpenses(user.uid);
       // setLoading(false);
     }
-  }, [user?.uid]); 
+  }, [user?.uid]);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -165,10 +189,7 @@ const Index = () => {
                 className="bg-white rounded-2xl p-4 mb-3 flex-row items-center shadow-sm"
               >
                 <View className="w-12 h-12 bg-blue-300 rounded-full items-center justify-center mr-3">
-                  
-                  <Image
-                    source={icons[expense.category]}
-                    />
+                  <Image source={icons[expense.category]} />
                 </View>
                 <View className="flex-1">
                   <View className="flex-row justify-between">
@@ -232,6 +253,22 @@ const Index = () => {
             }}
           >
             <FontAwesome5 name="pencil-alt" size={18} color="white" />
+          </TouchableOpacity>
+        </Animated.View>
+
+        {/* Upload From Gallery */}
+        <Animated.View
+          style={{ transform: [{ translateY: scanInvoiceTranslateY }] }}
+          className="absolute right-2 bottom-20"
+        >
+          <TouchableOpacity
+            className="w-12 h-12 bg-green-500 rounded-full items-center justify-center mb-2 shadow-md"
+            onPress={() => {
+              toggleMenu();
+              openGallery();
+            }}
+          >
+            <MaterialIcons name="photo-library" size={22} color="white" />
           </TouchableOpacity>
         </Animated.View>
 
